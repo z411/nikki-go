@@ -19,8 +19,8 @@ Then just run nikki without arguments and your blog should be generated in the `
 
 ## Planned
 * Automatic copying of static files such as stylesheets and images
-* Pagination
 * Archive list
 * Error handling
 * Tags (maybe)
+* Pagination (done)
 

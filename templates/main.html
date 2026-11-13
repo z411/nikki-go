@@ -29,4 +29,11 @@
 <div class="off">{{if $.InArticle}}<a href="{{.ShareURL}}">Tweet</a> | {{end}}<a href="{{$.Cfg.URL}}{{.URL}}">Permalink</a> | {{.Time}}</div>
 </article>
 {{end}}
+{{if gt $.TotalPages 1}}
+<div id="paginator">
+{{range $i, $p := .Pages}}
+{{if eq $i $.CurrentPage}}{{$i}}{{else}}<a href="{{$.Cfg.URL}}{{$p}}">{{$i}}</a>{{end}}
+{{end}}
+</div>
+{{end}}
 {{end}}

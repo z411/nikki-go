@@ -11,6 +11,8 @@ import (
     "slices"
     "time"
     "cmp"
+    "math"
+    "strconv"
     
     "io/fs"
     "encoding/json"
@@ -36,6 +38,7 @@ type Config struct{
     AuthorURL string `json:"author_url"`
     Via string `json:"via"`
     PrettyURLs bool `json:"pretty_urls"`
+    PageSize int `json:"page_size"`
 }
 
 type Article struct {
@@ -64,6 +67,9 @@ type PageContext struct {
     Articles []*Article
     Categories []string
     InArticle bool
+    CurrentPage int
+    TotalPages int
+    Pages []string
 }
 
 var articles []*Article;
@@ -211,7 +217,7 @@ func ParseArticle(path string, d fs.DirEntry, e error) error {
     // Parse URL
     obj.URL = filepath.Join(obj.Category, obj.Fname)
     if !cfg.PrettyURLs {
-        obj.URL = obj.URL + ".html"
+        obj.URL += ".html"
     }
     
     // Create share link
@@ -241,16 +247,67 @@ func RenderPage(obj *Article) {
     Render(outpath, "main.html", ctx)
 }
 
-func RenderFront(objs []*Article, category string) {
-    var outpath string;
+func RenderFronts(objs []*Article, category string) {
+    totalPages := int(math.Ceil(float64(len(objs)) / float64(cfg.PageSize)))
+    pages := make([]string, totalPages)
+    
+    /* Build page URLs */
+    for page := range pages {
+        var url string
+        
+        if page > 0 {
+            url = strconv.Itoa(page)
+        }
+        
+        if !cfg.PrettyURLs {
+            url += ".html"
+        }
+        
+        logger.Debug("URL is", url)
+        
+        if category != "" {
+            url = filepath.Join(category, url)
+        }
+        
+        pages[page] = url
+    }
+    
+    /* Generate pages */
+    for page := range pages {
+        start := page * cfg.PageSize
+        end := start + cfg.PageSize
+        
+        var sliced []*Article
+        
+        if page == len(pages) - 1 {
+            sliced = objs[start:]
+        } else {
+            sliced = objs[start:end]
+        }
+        
+        RenderFront(sliced, category, page, pages)
+    }
+}
+
+func RenderFront(objs []*Article, category string, page int, pages []string) {
+    logger.Debug("Processing page", page, "of", category)
+    
+    var outpath string
     var title string
+    var basename string
+    
+    if page > 0 {
+        basename = strconv.Itoa(page) + ".html"
+    } else {
+        basename = "index.html"
+    }
     
     if category != "" {
         title = category + " // " + cfg.Title
-        outpath = filepath.Join("out", category, "index.html")
+        outpath = filepath.Join("out", category, basename)
     } else {
         title = cfg.Title
-        outpath = filepath.Join("out", "index.html")
+        outpath = filepath.Join("out", basename)
     }
     
     ctx := PageContext{
@@ -260,6 +317,9 @@ func RenderFront(objs []*Article, category string) {
         Articles: objs,
         Categories: categoryTitles,
         InArticle: false,
+        CurrentPage: page,
+        TotalPages: len(pages),
+        Pages: pages,
     }
     
     Render(outpath, "main.html", ctx)
@@ -293,7 +353,7 @@ func main() {
     categories = make(map[string][]*Article)
     
     opts := &slog.HandlerOptions{
-        Level: slog.LevelInfo,
+        Level: slog.LevelDebug,
     }
     logger = slog.New(slog.NewTextHandler(os.Stdout, opts))
     
@@ -339,11 +399,11 @@ func main() {
     logger.Info("Rendering category pages...")
     for category, objs := range categories {
         logger.Debug("Rendering category", category, "...")
-        RenderFront(objs, category)
+        RenderFronts(objs, category)
     }
     
     logger.Info("Rendering front page...")
-    RenderFront(articles, "")
+    RenderFronts(articles, "")
     
     logger.Info("Done. Time taken:", time.Now().Sub(t))
 }
