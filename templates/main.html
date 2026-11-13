@@ -1,0 +1,32 @@
+{{template "base.html" .}}
+{{define "content"}}
+{{if $.InArticle}}
+<div class="btn"><a href="{{$.Cfg.URL}}">← go back</a></div>
+{{else}}
+<div class="categories">
+[ <a href="{{$.Cfg.URL}}/">all</a> ]
+{{range .Categories}}
+[ <a href="{{$.Cfg.URL}}{{.}}/">{{.}}</a> ]
+{{end}}
+</div>
+{{end}}
+<hr>
+{{range .Articles}}
+<article>
+{{if $.InArticle}}
+<h1>{{.Title}}</h1>
+{{else}}
+<h1><a href="{{$.Cfg.URL}}{{.URL}}">{{.Title}}</a></h1>
+{{end}}
+<div class="tag">by <a href="{{$.Cfg.AuthorURL}}">{{$.Cfg.Author}}</a> @ {{.Date}}
+<span style="float:right">[ <a href="{{$.Cfg.URL}}{{.Category}}/">{{.Category}}</a> ]</span>
+</div>
+{{.Head}}
+{{if and (not $.InArticle) .Cut}}
+<div class="readmore"><a href="{{$.Cfg.URL}}{{.URL}}">Read more →</a></div>
+{{end}}
+{{if $.InArticle}}{{.Body}}{{end}}
+<div class="off">{{if $.InArticle}}<a href="{{.ShareURL}}">Tweet</a> | {{end}}<a href="{{$.Cfg.URL}}{{.URL}}">Permalink</a> | {{.Time}}</div>
+</article>
+{{end}}
+{{end}}

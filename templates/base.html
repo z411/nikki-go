@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{.Title}}</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="{{.Cfg.Via}}">
+<meta property="og:title" content="{{.Title}}">
+<meta property="og:description" content="{{.Description}}">
+{{if .Image}}
+<meta property="og:image" content="{{.Image}}">
+{{end}}
+<link href="/s/style.css" rel="stylesheet" type="text/css">
+<link href="/s/code.css" rel="stylesheet" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="wlog">
+<header>
+  <strong>オマエラ</strong>
+  wlog
+  <nav>[
+    <a href="/" class="home">home</a>
+    <a href="/notme" class="notme">not me</a>
+    <a href="/wlog/" class="s wlog">wlog</a>
+    <a href="/gal/" class="gal">gallery</a>
+    <a href="/server" class="server">server</a>
+    <a href="/scripts" class="scripts">scripts</a>
+    <a href="/links" class="links">links</a>
+  ]</nav>
+</header>
+<hr>
+<main>
+{{block "content" .}}{{end}}
+</main>
+<footer>
+  web ★ omaera · org
+</footer>
+</body>
+</html>
