@@ -137,7 +137,7 @@ func ParseArticle(path string, d fs.DirEntry, e error) error {
 		return e
 	}
 
-	logger.Debug("Parsing article", path, "...")
+	logger.Debug("Parsing article", "path", path)
 
 	// Create article
 	var obj Article
@@ -234,7 +234,7 @@ func ParseArticle(path string, d fs.DirEntry, e error) error {
 }
 
 func RenderPage(obj *Article) {
-	logger.Debug("Rendering", obj.Title, "...")
+	logger.Debug("Rendering page", "page", obj.Title)
 
 	ctx := PageContext{
 		Title:       obj.Title + " // " + cfg.Title,
@@ -265,8 +265,6 @@ func RenderFronts(objs []*Article, category string) {
 			url += ".html"
 		}
 
-		logger.Debug("URL is", url)
-
 		if category != "" {
 			url = filepath.Join(category, url)
 		}
@@ -292,7 +290,7 @@ func RenderFronts(objs []*Article, category string) {
 }
 
 func RenderFront(objs []*Article, category string, page int, pages []string) {
-	logger.Debug("Processing page", page, "of", category)
+	logger.Debug("Processing page", "page", page, "category", category)
 
 	var outpath string
 	var title string
@@ -407,5 +405,5 @@ func main() {
 	logger.Info("Rendering front page...")
 	RenderFronts(articles, "")
 
-	logger.Info("Done. Time taken:", time.Now().Sub(t))
+	logger.Info("Done.", "time", time.Now().Sub(t))
 }
