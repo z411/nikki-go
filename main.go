@@ -73,6 +73,10 @@ type PageContext struct {
 	Pages       []string
 }
 
+const Version = "v0.5"
+const PagesDir = "pages"
+const OutDir = "out"
+
 var articles []*Article
 var categories map[string][]*Article
 var categoryTitles []string
@@ -245,7 +249,7 @@ func RenderPage(obj *Article) {
 		InArticle:   true,
 	}
 
-	outpath := filepath.Join("out", obj.Category, obj.Fname+".html")
+	outpath := filepath.Join(OutDir, obj.Category, obj.Fname+".html")
 	Render(outpath, "main.html", ctx)
 }
 
@@ -304,10 +308,10 @@ func RenderFront(objs []*Article, category string, page int, pages []string) {
 
 	if category != "" {
 		title = category + " // " + cfg.Title
-		outpath = filepath.Join("out", category, basename)
+		outpath = filepath.Join(OutDir, category, basename)
 	} else {
 		title = cfg.Title
-		outpath = filepath.Join("out", basename)
+		outpath = filepath.Join(OutDir, basename)
 	}
 
 	ctx := PageContext{
@@ -357,7 +361,7 @@ func main() {
 	}
 	logger = slog.New(slog.NewTextHandler(os.Stdout, opts))
 
-	logger.Info("nikki v0.5")
+	logger.Info("nikki " + Version)
 	ParseConfig()
 
 	logger.Info("Initializing parser...")
@@ -379,8 +383,8 @@ func main() {
 		),
 	)
 
-	logger.Info("Parsing articles in 'pages'...")
-	filepath.WalkDir("pages", ParseArticle)
+	logger.Info("Parsing articles in '" + PagesDir + "'...")
+	filepath.WalkDir(PagesDir, ParseArticle)
 
 	logger.Info("Arranging articles and categories...")
 	ArrangeArticles()
