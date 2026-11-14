@@ -2,9 +2,10 @@
 	"title": 	"wlog",
 	"description":	"Personal weblog for ramblings about tech and media.",
 	"url":		"/wlog/",
+    "full_url": "https://omaera.org/wlog/",
 	"author":	"z411",
 	"author_url":	"/notme",
 	"via":		"z411_",
 	"pretty_urls":	true,
-	"page_size": 5
+	"page_size": 10
 }
