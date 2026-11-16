@@ -200,8 +200,8 @@ func ParseArticle(path string, d fs.DirEntry, e error) error {
 			if bytes.Equal(line, cutMark) {
 				obj.Cut = true
 			} else {
-				previewb.Write(line)
-				previewb.WriteByte('\n')
+				previewb.Write(line); bodyb.Write(line)
+				previewb.WriteByte('\n'); bodyb.WriteByte('\n')
 			}
 		} else {
 			bodyb.Write(line)
