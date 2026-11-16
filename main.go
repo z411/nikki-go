@@ -162,7 +162,7 @@ func ParseArticle(path string, d fs.DirEntry, e error) error {
 
 		key, value, found := strings.Cut(line, " ")
 		if !found {
-			logger.Debug("Wrong metadata, skipping...")
+			logger.Warn("Wrong metadata, skipping...")
 			break
 		}
 
