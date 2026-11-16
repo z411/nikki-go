@@ -28,6 +28,15 @@
 {{if $.InArticle}}{{.Body}}{{end}}
 <div class="off">{{if $.InArticle}}<a href="{{.ShareURL}}">Tweet</a> | {{end}}<a href="{{$.Cfg.URL}}{{.URL}}">Permalink</a> | {{.Time}}</div>
 </article>
+{{if $.InArticle}}
+<script data-isso-reply-notifications-default-enabled="true"
+	data-isso-page-author-hashes="2c4e6963def1"
+	src="https://api.omaera.org/isso/js/embed.min.js"></script>
+<section id="isso-thread" data-title="{{.Title}}" data-isso-id="{{.URL}}">
+	<noscript>Javascript needs to be activated to view comments.</noscript>
+</section>
+<div class="btn"><a href="{{$.Cfg.URL}}">← go back</a></div>
+{{end}}
 {{end}}
 {{if gt $.TotalPages 1}}
 <div id="paginator">
