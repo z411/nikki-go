@@ -21,7 +21,7 @@
 <div class="tag">by <a href="{{$.Cfg.AuthorURL}}">{{$.Cfg.Author}}</a> @ {{.Date}}
 <span style="float:right">[ <a href="{{$.Cfg.URL}}{{.Category}}/">{{.Category}}</a> ]</span>
 </div>
-{{.Head}}
+{{.Preview}}
 {{if and (not $.InArticle) .Cut}}
 <div class="readmore"><a href="{{$.Cfg.URL}}{{.URL}}">Read more →</a></div>
 {{end}}

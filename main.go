@@ -50,7 +50,7 @@ type Article struct {
 	Time        string
 	Description string
 	Category    string
-	Head        template.HTML
+	Preview     template.HTML
 	Body        template.HTML
 	Cut         bool
 	Image       string
@@ -189,7 +189,7 @@ func ParseArticle(path string, d fs.DirEntry, e error) error {
 	}
 
 	// Read and parse content
-	var headb bytes.Buffer
+	var previewb bytes.Buffer
 	var bodyb bytes.Buffer
 	var cutMark = []byte("---CUT---")
 
@@ -200,8 +200,8 @@ func ParseArticle(path string, d fs.DirEntry, e error) error {
 			if bytes.Equal(line, cutMark) {
 				obj.Cut = true
 			} else {
-				headb.Write(line)
-				headb.WriteByte('\n')
+				previewb.Write(line)
+				previewb.WriteByte('\n')
 			}
 		} else {
 			bodyb.Write(line)
@@ -209,7 +209,7 @@ func ParseArticle(path string, d fs.DirEntry, e error) error {
 		}
 	}
 
-	obj.Head = ToHTML(headb.Bytes())
+	obj.Preview = ToHTML(previewb.Bytes())
 
 	// Handle article cut
 	if obj.Cut {
